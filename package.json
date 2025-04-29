@@ -1,0 +1,22 @@
+{
+  "name": "koishi-plugin-mhws-wiki",
+  "description": "一个怪物猎人：荒野Wiki资料查询插件，内置Python爬虫工具（需要Python环境）",
+  "version": "0.0.1",
+  "main": "lib/index.js",
+  "typings": "lib/index.d.ts",
+  "files": [
+    "lib",
+    "dist"
+  ],
+  "license": "MIT",
+  "scripts": {},
+  "keywords": [
+    "chatbot",
+    "koishi",
+    "plugin"
+  ],
+  "devDependencies": {},
+  "peerDependencies": {
+    "koishi": "^4.18.7"
+  }
+}
