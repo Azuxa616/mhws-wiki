@@ -1,6 +1,6 @@
 {
   "name": "koishi-plugin-mhws-wiki",
-  "description": "一个怪物猎人：荒野Wiki资料查询插件，内置Python爬虫工具（需要Python环境）",
+  "description": "一个魔物猎人：荒野Wiki资料查询插件，内置Python爬虫工具（需要Python环境）",
   "version": "0.0.1",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
@@ -13,10 +13,21 @@
   "keywords": [
     "chatbot",
     "koishi",
-    "plugin"
+    "plugin",
+    "mhws",
+    "monster-hunter",
+    "wiki"
   ],
-  "devDependencies": {},
   "peerDependencies": {
-    "koishi": "^4.18.7"
+    "koishi": "^4.14.1"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@types/node": "^20.10.6"
+  },
+  "koishi": {
+    "service": {
+      "optional": ["canvas"]
+    }
   }
 }
