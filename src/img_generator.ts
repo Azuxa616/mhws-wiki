@@ -44,7 +44,7 @@ async function htmlToImage(ChromePath: string, htmlContent: string, outputPath: 
   await browser.close();
   return imageBuffer;
 }
-
+//生成怪物卡片
 export async function formatMonsterDataToImage(ChromePath: string, monsterData?: any) {
   const outputDir = path.resolve('data/mhws-wiki/pic');
   
@@ -70,6 +70,7 @@ export async function formatMonsterDataToImage(ChromePath: string, monsterData?:
     throw error;
   }
 }
+
 
 // 根据怪物数据生成HTML内容
 function generateMonsterHtml(monsterData: any): string {

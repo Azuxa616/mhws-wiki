@@ -2,8 +2,8 @@ import { Context, Schema, Command, h } from 'koishi'
 import * as path from 'path'
 import * as fs from 'fs'
 import { runCrawler } from './crawler_runner'
-import { getMonsterData } from './data_loader'
-import { formatMonsterData } from './reply_generator'
+import { getMonsterData ,getMonsterList} from './data_loader'
+import { formatMonsterData ,formatMonsterList} from './reply_generator'
 import { formatMonsterDataToImage } from './img_generator'
 
 // 扩展Context类型
@@ -77,9 +77,28 @@ export function apply(ctx: Context, config: Config) {
       }
     })
   
-  // 移除canvas服务检查，改用puppeteer直接生成图片
-  
-  // 注册查询命令
+
+  // 注册查询怪物列表命令
+  ctx.command('mhws.list', '查询怪物猎人Wilds怪物列表')
+   .action(async () => {
+      try {
+        const monsterList = await getMonsterList(dataDir)
+        if(!monsterList){
+          return `未找到怪物列表`
+        }
+        
+        try{
+          return formatMonsterList(monsterList)
+        }catch(error){
+          ctx.logger('mhws-wiki').error(`格式化怪物列表时出错: ${error}`)
+          return '格式化怪物列表时出错，请检查日志'
+        }
+      }catch(error){
+        ctx.logger('mhws-wiki').error(`查询怪物列表时出错: ${error}`)
+        return '查询怪物列表时出错，请检查日志'
+      }
+   })
+  // 注册查询怪物命令
   ctx.command('mhws.monster <name:string>', '查询魔物猎人Wilds怪物数据')
     .action(async (_, name) => {
       if (!name) {
@@ -95,7 +114,7 @@ export function apply(ctx: Context, config: Config) {
         // 根据配置选择回复模式
         if (replyMode === 'pic') {
           try {
-            // 直接使用img_generator生成图片，不再依赖canvas
+            // 直接使用img_generator生成图片
             try {
               const image = await formatMonsterDataToImage(config.chromePath, monsterData)
               if (Buffer.isBuffer(image)) {
@@ -124,5 +143,5 @@ export function apply(ctx: Context, config: Config) {
       }
     })
 }
-
+  
 

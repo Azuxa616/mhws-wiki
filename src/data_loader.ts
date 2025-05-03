@@ -1,6 +1,18 @@
 import * as fs from 'fs'
 import * as path from 'path'
 
+// 获取怪物列表
+export async function getMonsterList(dataDir: string):Promise<any> {
+    const listPath = path.join(dataDir,'monster_list.json')
+
+    if (!fs.existsSync(listPath)) {
+      throw new Error('怪物列表数据不存在，请先运行爬虫')
+    }
+    const monsterList = JSON.parse(fs.readFileSync(listPath, 'utf-8'))
+    console.log(`@@@monsterList:`,monsterList)
+    return monsterList
+}
+
 // 获取怪物数据
 export async function getMonsterData(name: string, dataDir: string): Promise<any> {
     // 读取怪物列表文件
@@ -28,4 +40,3 @@ export async function getMonsterData(name: string, dataDir: string): Promise<any
     
     return JSON.parse(fs.readFileSync(monsterPath, 'utf-8'))
   }
-  
