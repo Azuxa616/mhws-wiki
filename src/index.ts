@@ -3,7 +3,8 @@ import * as path from 'path'
 import * as fs from 'fs'
 import { runCrawler } from './crawler_runner'
 import { getMonsterData } from './data_loader'
-import { formatMonsterData, formatMonsterDataToImage } from './reply_generator'
+import { formatMonsterData } from './reply_generator'
+import { formatMonsterDataToImage } from './img_generator'
 
 // 扩展Context类型
 declare module 'koishi' {
@@ -18,6 +19,7 @@ export interface Config {
   pythonPath: string
   dataDir: string
   replyMode: 'text' | 'pic'
+  chromePath: string
 }
 
 export const Config: Schema<Config> = Schema.object({
@@ -26,13 +28,14 @@ export const Config: Schema<Config> = Schema.object({
   replyMode:Schema.union([
     Schema.const('text').description("文字回复"),
     Schema.const('pic').description("图片回复（实验性）")
-  ]).default('text')
+  ]).default('text'),
+  chromePath: Schema.string().required().description('chrome内核浏览器可执行文件路径')
 })
 
 // 声明插件依赖
 export const inject = {
   required: [] as const,
-  optional: ['canvas'] as const
+  optional: [] as const // 移除对canvas的可选依赖
 }
 
 export function apply(ctx: Context, config: Config) {
@@ -74,24 +77,7 @@ export function apply(ctx: Context, config: Config) {
       }
     })
   
-  // 在启动时检查canvas服务
-  if (replyMode === 'pic') {
-    if (!ctx.canvas) {
-      ctx.logger('mhws-wiki').warn('图片回复模式开启但canvas服务不可用，将使用文本回复')
-    } else {
-      // 检查canvas服务是否符合预期
-      try {
-        if (
-          !ctx.canvas.createCanvas || 
-          (typeof ctx.canvas.createCanvas !== 'function' && typeof ctx.canvas !== 'function')
-        ) {
-          ctx.logger('mhws-wiki').warn('canvas服务接口不符合预期，可能无法正常使用图片回复模式')
-        }
-      } catch (error) {
-        ctx.logger('mhws-wiki').warn(`检查canvas服务时出错: ${error}`)
-      }
-    }
-  }
+  // 移除canvas服务检查，改用puppeteer直接生成图片
   
   // 注册查询命令
   ctx.command('mhws.monster <name:string>', '查询魔物猎人Wilds怪物数据')
@@ -109,15 +95,9 @@ export function apply(ctx: Context, config: Config) {
         // 根据配置选择回复模式
         if (replyMode === 'pic') {
           try {
-            // 检查canvas服务是否可用
-            if (!ctx.canvas) {
-              ctx.logger('mhws-wiki').warn('图片回复模式开启但canvas服务不可用，将使用文本回复')
-              return formatMonsterData(monsterData)
-            }
-            
-            // 生成图片并返回
+            // 直接使用img_generator生成图片，不再依赖canvas
             try {
-              const image = await formatMonsterDataToImage(monsterData, ctx)
+              const image = await formatMonsterDataToImage(config.chromePath, monsterData)
               if (Buffer.isBuffer(image)) {
                 return h.image(image, 'image/png')
               } else {
