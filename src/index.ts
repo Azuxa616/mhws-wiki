@@ -58,7 +58,7 @@ export function apply(ctx: Context, config: Config) {
   }
   
   // 注册命令
-  ctx.command('mhws.crawl', '从魔物猎人Wilds官方网站爬取数据')
+  ctx.command('mhws.crawl', '从 怪物猎人Wilds Wiki网站爬取数据')
     .option('monster', '-m <name:string> 爬取特定怪物数据')
     .option('all', '-a 爬取所有怪物数据')
     .action(async ({ options }) => {

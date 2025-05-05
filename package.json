@@ -1,7 +1,10 @@
 {
   "name": "koishi-plugin-mhws-wiki",
-  "description": "一个魔物猎人：荒野Wiki资料查询插件，内置Python爬虫工具（需要Python环境）",
-  "version": "0.0.1",
+  "description": "一个怪物猎人：荒野Wiki资料查询插件，内置Python爬虫工具（需要Python环境）",
+  "version": "1.0.0",
+  "contributors": [                         
+    "Azuxa616 <2226123739@qq.com>"
+  ],
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "files": [
@@ -11,11 +14,14 @@
   "license": "MIT",
   "scripts": {},
   "keywords": [
+    "怪物猎人",
+    "怪物猎人：荒野",
+    "monster hunter wilds",
+    "monster hunter",
     "chatbot",
     "koishi",
     "plugin",
     "mhws",
-    "monster-hunter",
     "wiki"
   ],
   "peerDependencies": {
@@ -26,8 +32,17 @@
     "@types/node": "^20.10.6"
   },
   "koishi": {
+    "description": {
+      "zh": "一个怪物猎人：荒野Wiki资料查询插件，内置Python爬虫工具（需要Python环境）",
+      "en": "A Monster Hunter: Wilds Wiki query plugin, built-in Python crawler tools (requires Python environment)"
+    },
     "service": {
-      "optional": ["canvas"]
+      "optional": []
     }
+  },
+  "homepage":"https://github.com/Azuxa616/mhws-wiki#",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Azuxa616/mhws-wiki.git"
   }
 }
